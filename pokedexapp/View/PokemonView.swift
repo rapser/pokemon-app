@@ -8,8 +8,38 @@
 import SwiftUI
 
 struct PokemonView: View {
+    
+    private let columns = [GridItem(.flexible()),GridItem(.flexible())]
+    
+    @ObservedObject var viewModel = PokemonViewModel()
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        NavigationView {
+            ScrollView {
+                LazyVGrid(columns: columns,spacing: 20, content: {
+                    ForEach(viewModel.pokemon){ pokemon in                        
+                        NavigationLink(destination: PokemmonDetail(pokemon: pokemon),
+                                       label: {
+                            PokemonCell(pokemon: pokemon, viewModel: viewModel)
+                        })
+                        .foregroundColor(.black)
+                    }
+                })
+            }.navigationTitle("Pokemon")
+        }
+    }
+}
+
+struct BackButton: View {
+    let action: () -> Void
+    var body: some View {
+        Button(action: action) {
+            Image(systemName: "chevron.backward")
+                .foregroundColor(.black)
+                .padding(.all, 12)
+                .background(Color.white)
+                .cornerRadius(8.0)
+        }
     }
 }
 
